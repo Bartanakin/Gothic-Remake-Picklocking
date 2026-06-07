@@ -32,7 +32,6 @@ if MAX_DEPTH < 1:
     print('Invalid input in max_depth.txt. The integer should be a positive integer.')
     exit(0)
 
-print(MAX_DEPTH)
 # Initial positions
 SECTIONS=len(initial)
 
@@ -60,26 +59,6 @@ for line in lines:
     
     coupling.append(move)
 
-print(coupling)
-# Coupling matrix
-coupling = [
-    [ 1,  1,  0,  0,  0, 1],
-    [ 0,  1,  1,  0,  0, -1],
-    [ 0,  0,  1,  1,  0,  0],
-    [ 0,  0,  0,  1,  0,  0],
-    [ 0,  0,  1,  0,  1,  1],
-    [ 0,  0,  0,  0,  0,  1],
-]
-
-exit()
-# SECTIONS=2
-# # Initial positions
-# initial = (5, 3)
-# # Coupling matrix
-# coupling = [
-#     [ 1,  -1],
-#     [ 1,  1],
-# ]
 goal = tuple([4] * SECTIONS)
 
 # reversed is "1" or "-1" depending on whether the move is reversed or not
@@ -108,6 +87,7 @@ def push_reached_combination(cur_state, next_state, move, reversed):
     return True
 
 
+print("Running with maximal depth: ", MAX_DEPTH)
 current_combinations = set([initial])
 next_combinations = set()
 depth = 0
@@ -129,7 +109,6 @@ while not goal_found and depth < MAX_DEPTH:
 
     for combination in current_combinations:
         if goal == combination:
-            print("Goal reached: ", combination)
             goal_found = True
             break
 
@@ -154,17 +133,27 @@ def calculate_key_sequence(combination):
     return keys
 
 if goal_found:
-    print("Goal found at depth: ", depth)
+    print("Goal reached at depth: ", depth)
     winning_combination = combinations.get(goal)
     winning_combination2 = winning_combination.copy()
-    print("Winning combination: ", winning_combination)
-    combination = initial
-    while goal != combination:
-        print("Current combination: ", combination)
-        move, reversed = winning_combination.pop(0)
-        combination = apply_move(combination, move, reversed)
+    # print("Winning combination: ", winning_combination)
+    # combination = initial
+    # while goal != combination:
+    #     print("Current combination: ", combination)
+    #     move, reversed = winning_combination.pop(0)
+    #     combination = apply_move(combination, move, reversed)
 
-    print("key sequence:" , calculate_key_sequence(winning_combination2))
+    print("key sequence:")
+    keys = calculate_key_sequence(winning_combination2)
+    block_int = 0
+    for chunks in [keys[i:i+5] for i in range(0, len(keys), 5)]:
+        for key in chunks:
+            print(key, " ", end="")
+        print()  # Print a newline after each chunk
+        block_int += 1
+
+        if block_int % 5 == 0:
+            print()  # Print a newline after every 5 chunks
 else:
     print("Goal not found within depth limit.")
     
