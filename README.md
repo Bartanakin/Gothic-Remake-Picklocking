@@ -1,31 +1,39 @@
 # Gothic Remake Picklocking Solver
 
-A Python script to generate a sequence of keys (`W`, `S`, `D`, or `A`) that opens any lock in Gothic Remake.
+A small Python solver for Gothic Remake lock puzzles. The script reads a lock configuration from input files, searches the allowed move space, and prints a sequence of keyboard commands (`W`, `S`, `D`, `A`) that should open the lock.
 
-## What this does
+## What it does
 
-The script reads lock configuration files, explores the available moves, and prints a solution sequence of key presses to open the lock.
+- Reads lock setup from three text files: `initial.txt`, `moves.txt`, and `max_depth.txt`
+- Uses a search algorithm to explore valid plate moves
+- Prints a candidate keypress sequence to open the lock
 
-## Installation
+## Requirements
+
+- Python 3
+- `picklocking.py` and the input files must be in the same folder
+
+## Usage
 
 1. Clone the repository:
    ```powershell
    git clone https://github.com/Bartanakin/Gothic-Remake-Picklocking.git
    cd "Picklocking Gothic Remake"
    ```
-2. Install Python if it is not already installed - https://www.python.org/downloads
-3. Run the script:
+2. Run the solver:
    ```powershell
    python picklocking.py
    ```
 
-## Input setup
+If the solver does not find a solution, increase the value in `max_depth.txt` and try again.
 
-The solver uses three input files located next to `picklocking.py`:
+## Input files
 
-### 1. `initial.txt`
+The solver expects three files next to `picklocking.py`.
 
-Defines the initial configuration of the lock.
+### `initial.txt`
+
+Specifies the starting plate positions.
 
 - The file contains one line with numbers from `1` to `7`.
 - Each number represents the initial position of a plate in the.
@@ -38,52 +46,55 @@ If the lock has `n` plates, this line should contain exactly `n` numbers.
 Look at the example below:
 
 ![image](img/initial.png)
+
 The corresponding content of `initial.txt` is:
 ```
 57126
 ```
 
-### 2. `moves.txt`
+### `moves.txt`
 
-Defines how plates react when the picklock moves sideways.
+Describes how plates respond when the picklock moves left or right.
 
-- The file contains `n` lines, one for each plate.
-- Each line has exactly `n` characters.
-- Characters can be:
-  - `F` � Forward
-  - `R` � Reversed
-  - `N` � Neutral
+- Exactly `n` lines, one line per plate
+- Each line contains exactly `n` characters
+- Valid characters:
+  - `F` = Forward
+  - `R` = Reversed
+  - `N` = Neutral
 
-Each line describes how the plates behave when you press `D` or `A`.
-
-- If a plate slides in the same direction as the original plate, use `F`.
-- If it slides in the opposite direction, use `R`.
-- If it does not move, use `N`.
-- The file should contain `F` on the diagonal (each plate affects itself in the forward direction).
+Each line describes how the plates behave when the player presses `D` or `A`.
 
 There are always `2 * n` possible moves in the lock system, and some moves may break the picklock (the algorithm will never select them, don't worry).
 
 Look at the example below:
+
 ![image](img/moved.png)
-and compare it with the previous example. Plate number `1` was moved exactly once to the right (the player clicked `D`). Plates `2` and `3` did not budge, plate `4` slid the same direction as plate `1`, whereas plate `5` slid opposite.
+
+and compare it with the previous example. Plate number `1` was moved exactly once to the right (the player clicked `D`). Plates `2` and `3` did not budge, plate `4` slid the opposite direction to plate `1`, whereas plate `5` slid the same direction.
 Therefore the first line of `moves.txt` is:
 ```
-FNNFR
+FNNRF
 ```
 
-### 3. `max_depth.txt`
+### `max_depth.txt`
 
 Defines the maximum number of plate slides the solver is allowed to explore.
 
-- This prevents the algorithm from running indefinitely.
-- If the solver does not find a winning combination, increase this number and try again.
+- One integer value only
+- Prevents the search from running indefinitely
+- Increase this value if no solution is found
 
-## Running the solver
+## Example workflow
 
-Make sure the input files exist and are correctly formatted, then run:
+1. Create `initial.txt` with the starting plate positions
+2. Create `moves.txt` with the plate interaction rules
+3. Set a search depth in `max_depth.txt`
+4. Run `python picklocking.py`
+5. Read the output sequence of `W`, `S`, `D`, and `A`
 
-```powershell
-python picklocking.py
-```
+## Notes
 
-The script will read the lock configuration and output a sequence of key presses that should open the lock.
+- The solver may skip moves that would break the picklock
+- If the configuration is invalid, the script may fail or return no solution
+- Keep the input files next to `picklocking.py`
