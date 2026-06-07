@@ -35,6 +35,14 @@ Defines the initial configuration of the lock.
 
 If the lock has `n` plates, this line should contain exactly `n` numbers.
 
+Look at the example below:
+
+![image](img/initial.png)
+The corresponding content of `initial.txt` is:
+```
+57126
+```
+
 ### 2. `moves.txt`
 
 Defines how plates react when the picklock moves sideways.
@@ -54,6 +62,14 @@ Each line describes how the plates behave when you press `D` or `A`.
 - The file should contain `F` on the diagonal (each plate affects itself in the forward direction).
 
 There are always `2 * n` possible moves in the lock system, and some moves may break the picklock (the algorithm will never select them, don't worry).
+
+Look at the example below:
+![image](img/moved.png)
+and compare it with the previous example. Plate number `1` was moved exactly once to the right (the player clicked `D`). Plates `2` and `3` did not budge, plate `4` slid the same direction as plate `1`, whereas plate `5` slid opposite.
+Therefore the first line of `moves.txt` is:
+```
+FNNFR
+```
 
 ### 3. `max_depth.txt`
 
